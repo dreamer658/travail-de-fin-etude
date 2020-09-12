@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% load moonTags %}
+
+
+{% block title %}Detail{% endblock title %}
+
+{% block content %}
+
+
+    <div class="container">
+
+        <!-- Portfolio Item Heading -->
+        <h1 class="my-4">{{product.name}}
+        </h1>
+
+        <!-- Portfolio Item Row -->
+        <div class="row">
+
+            <div class="col-md-8">
+                <img class="img-fluid" src="{{product.image|default:'http://placehold.it/400x400'}}" width="400" height="400">
+            </div>
+
+            <div class="col-md-4">
+                <h3 class="my-3">Description</h3>
+                <p>{{product.description}}</p>
+                <ul>
+                  <li>Prix(EUR) : {{product.price}}</li>
+                    {% if product.cat == 'accessoire' %}
+                       <li>Largeur : {{product.accessory.width}}</li>
+                       <li>Epaisseur : {{product.accessory.thickness}}</li>
+
+                    {% elif product.cat == 'vetement' %}
+                       <li>Taille lettre : {{product.clothes.size_letter}}</li>
+                       <li>Taille nombre : {{product.clothes.size_digit}}</li>
+                    {% else %}
+                       <li>Taille : {{product.shoes.size_number}}</li>
+                    {% endif %}
+
+                    <li>Matière : {{product.material}}</li>
+                    <li>Couleur : {{product.color}}</li>
+
+                </ul>
+                <button data-product={{product.pk}} data-action="add" class = "btn btn-outline-secondary add-btn update-cart" >Ajouter au panier</button>
+
+            		{% if request.user.is_authenticated %}
+            			<a href="{% url 'avis' product.pk %}" class = "btn btn-outline-secondary" > Avis </a>
+
+            			{% if product.is_liked %}
+            			<a href="{% url 'favourite' product.pk %}">
+            				<i class="fas fa-heart fa-2x"></i>
+            			</a>
+            			{% else %}
+            			<a href="{% url 'favourite' product.pk %}">
+            				<i class="far fa-heart fa-2x"></i>
+            			</a>
+            			{% endif %}
+
+            		{% endif %}
+            </div>
+
+        </div>
+        {% if user.is_staff %}
+        	<a href="{% url 'updateproduct' product.pk %}" class="btn btn-info"> Modifier produit </a>
+        	<a href="{% url 'deleteproduct' product.pk %}" class="btn btn-info"> Supprimer produit </a>
+        {% endif %}
+
+    </div>
+
+
+
+{% endblock content %}

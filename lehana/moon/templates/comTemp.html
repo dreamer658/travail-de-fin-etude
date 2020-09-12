@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Commentaire{% endblock title %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h2>Mon avis</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{form.as_p}}
+  <br>
+  <button class" btn btn-info" type="submit" > Envoyer votre avis </button>
+</form>
+
+
+
+{% endblock content %}

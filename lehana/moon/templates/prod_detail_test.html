@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="row">
+	<div class="col-lg-6">
+		<img src="{{product.image}} " width="270" height="270">
+	</div>
+
+	<div style="padding:50px" class="col-lg-6">
+
+		<h3>{{product.name}}</h3>
+		<hr>
+
+		<form method="POST">
+			{% csrf_token %}
+			<input min="1" value=1 type="number" name="quantity">
+      <button data-product={{product.pk}} data-action="add" class = "btn btn-outline-secondary add-btn update-cart" >Ajouter au panier</button>
+		</form>
+
+		<h2>Price: ${{product.price}}</h2>
+
+		{% if request.user.is_authenticated %}
+			<a href="{% url 'avis' product.pk %}" class = "btn btn-outline-secondary" > Avis </a>
+
+			{% if product.is_liked %}
+			<a href="{% url 'favourite' product.pk %}">
+				<i class="fas fa-heart fa-2x"></i>
+			</a>
+			{% else %}
+			<a href="{% url 'favourite' product.pk %}">
+				<i class="far fa-heart fa-2x"></i>
+			</a>
+			{% endif %}
+
+		{% endif %}
+
+
+	</div>
+</div>
+{% if user.is_staff %}
+	<a href="{% url 'updateproduct' product.pk %}" class="btn btn-info"> Modifier produit </a>
+	<a href="{% url 'deleteproduct' product.pk %}" class="btn btn-info"> Supprimer produit </a>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Commentaire{% endblock title %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h2> Liste de favoris </h2>
+
+{% for product in new %}
+
+
+<div >
+    <h4 >{{product.name}}</h4>
+    <a href="{% url 'ProdDetailTest' product.pk %}" data-product={{product.pk}} data-action="add" class = "btn btn-outline-secondary add-btn update-cart" >Voir</a>
+
+    <div id="favourite-section">
+      <a href="{% url 'favourite' product.pk %}" class = "btn btn-info">
+        delete
+      </a>
+
+    </div>
+
+</div>
+{% empty %}
+
+<h3> Pas encore de favoris, brave âme. </h3>
+
+
+{% endfor %}
+
+
+
+
+{% endblock content %}

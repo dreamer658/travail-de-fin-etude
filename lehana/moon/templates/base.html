@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>{% block title %}{% endblock title %}</title>
+    <meta charset="utf-8">
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap , jquery, popper, bootstrap core JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/335dfa2d46.js" crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript">
+    //To get the cookie
+		function getToken(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+    const csrftoken = getToken('csrftoken');
+
+
+		function uuidv4() {
+      //A function we can trigger to set the device ID
+		  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+		    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+		    return v.toString(16);
+		  });
+		}
+
+
+
+
+		let device = getToken('device')
+
+		if (device == null || device == undefined){
+			device = uuidv4()
+		}
+
+		document.cookie ='device=' + device + ";domain=;path=/"
+
+	</script>
+
+
+
+
+</head>
+
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'home' %}">
+        <img src="https://image.freepik.com/free-vector/head-lion-logo_96853-137.jpg" width="100px" class="rounded-circle">
+    </a>
+
+     <div class="container">
+
+         <div class="collapse navbar-collapse" >
+     	    <ul class="navbar-nav mr-auto">
+     	      <li class="nav-item active">
+     	        <a class="nav-link" href="{% url 'Women' %}">Femme <span class="sr-only">(current)</span></a>
+     	      </li>
+            <li class="nav-item active">
+     	        <a class="nav-link" href="{% url 'Men' %}">Homme <span class="sr-only">(current)</span></a>
+     	      </li>
+
+            <li class="nav-item active">
+     	        <a class="nav-link" href="{% url 'Kids' %}">Enfant <span class="sr-only">(current)</span></a>
+     	      </li>
+
+     	    </ul>
+     	    <div class="form-inline my-2 my-lg-0">
+            {% if user.is_authenticated %}
+              <a href="{% url 'userProfile' %}"class="nav-link">Mon profile</a>
+              <a class="nav-link" href="{% url 'logout' %}">Deconnexion<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{% url 'favouriteList' %}">favoris<span class="sr-only">(current)</span></a>
+            {% else %}
+     	     	<a href="{% url 'login' %}"class="nav-link">Connexion</a>
+            <a href="{% url 'register' %}"class="nav-link">s'enregistrer</a>
+            {% endif %}
+     	     	<a href="{% url 'Cart' %}">
+     	    		<img  id="cart-icon" src="{% static 'images/cart.png' %}">
+     	    	</a>
+     	    	<p id="cart-total">{{cartItems}}</p>
+
+     	    </div>
+     	  </div>
+
+
+     </div>
+ </nav>
+</header>
+
+<!-- container - Page Content -->
+<div class="container" style="margin-top:30px;margin-bottom:30px">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{message.tags}}">
+          {{message}}
+        </div>
+      {% endfor %}
+    {% endif %}
+    {% block content %} Base content {% endblock content %}
+</div>
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+<script type="text/javascript" src="{% static 'js/cart.js' %}" > </script>
+
+
+</html>

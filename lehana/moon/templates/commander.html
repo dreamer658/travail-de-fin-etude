@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+     <div class="row">
+		<div class="col-lg-6">
+			<div class="box-element" id="form-wrapper">
+				<form id="form">
+					<div id="user-info">
+						<div class="form-field">
+							<input required class="form-control" type="text" name="name" placeholder="Name..">
+						</div>
+						<div class="form-field">
+							<input required class="form-control" type="email" name="email" placeholder="Email..">
+						</div>
+					</div>
+
+					<div id="shipping-info">
+						<hr>
+						<p>Infos de livraison:</p>
+						<hr>
+						<div class="form-field">
+							<input class="form-control" type="text" name="locality" placeholder="Localité..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="street" placeholder="Rue..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="street_number" placeholder="Numéro..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="postal_code" placeholder="Code postal..">
+						</div>
+            <div class="form-field">
+              <input class="form-control" type="text" name="city" placeholder="Ville..">
+            </div>
+					</div>
+
+					<hr>
+					<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continuer">
+				</form>
+			</div>
+
+			<br>
+			<div class="box-element hidden" id="payment-info">
+				<small>Paypal</small>
+        <div id="paypal-button-container"></div>
+        <!-- <div id="paypal-button-container"> </div> -->
+        <button id="make-payement">Faire un payement</button>
+
+			</div>
+
+		</div>
+
+		<div class="col-lg-6">
+			<div class="box-element">
+				<a  class="btn btn-outline-dark" href="{% url 'Cart' %}">&#x2190; Retour au panier</a>
+				<hr>
+				<h3>Resumer de commande</h3>
+				<hr>
+        {% for item in items %}
+				<div class="cart-row">
+					<div style="flex:2"><img class="row-image" src="{{ item.product.image }}"></div>
+					<div style="flex:2"><p>{{item.product.name}}</p></div>
+					<div style="flex:1"><p>{{item.product.price|floatformat:2}}£</p></div>
+					<div style="flex:1"><p>{{item.quantity}}</p></div>
+				</div>
+        {% endfor %}
+				<h5>Items:   {{order.get_cart_items}}</h5>
+				<h5>Total:   {{order.get_cart_total|floatformat:2}}£</h5>
+			</div>
+		</div>
+	</div>
+
+<script src="https://www.paypal.com/sdk/js?client-id=AaoJv9w09EL_VJrMRxD9oOyVHyvFUXRS_aqo7wPYDwEME62SKNLgH1-ahJzatpce3rkJc7ywqu3tkD4w&currency=USD"></script>
+<script>
+    var total = '{{order.get_cart_total}}'
+    // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+
+          style: {
+              layout: 'horizontal',
+              color:'silver'
+          },
+
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: parseFloat(total).toFixed(2)
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                  submitFormData()
+            });
+        }
+
+
+    }).render('#paypal-button-container');
+</script>
+
+  <script type="text/javascript">
+    //var total = '{{order.get_cart_total}}'
+
+      //hide the form if user already logged in
+      //document.getElementById('user-info').innerHTML=''
+      //document.getElementById('payment-info').classList.remove("hidden");
+
+    // To hide and show the button Payement
+    var form = document.getElementById('form')
+    form.addEventListener('submit', function(e){
+      e.preventDefault()
+      console.log('Form submitted..')
+      document.getElementById('form-button').classList.add("hidden");
+      document.getElementById('payment-info').classList.remove("hidden");
+    })
+
+    /* document.getElementById('make-payement').addEventListener('click',function(e){
+      submitFormData()
+    })*/
+
+    //we want to submit info enter by the customer in the backend in the view process_order
+    // We'll also redirect him in the home page
+    function submitFormData(){
+      console.log('Payment button clicked')
+
+      var userFormData = {
+        'Name':null,
+        'Email':null,
+        'Total':total,
+      }
+
+      var shippingInfo = {
+        'locality':null,
+        'street':null,
+        'street_number':null,
+        'postal_code':null,
+        'city':null,
+
+      }
+
+      shippingInfo.locality = form.locality.value
+      shippingInfo.street = form.street.value
+      shippingInfo.street_number = form.street_number.value
+      shippingInfo.postal_code = form.postal_code.value
+      shippingInfo.city = form.city.value
+
+      userFormData.name = form.name.value
+      userFormData.email = form.email.value
+
+      var url ='/process_order/'
+      fetch(url, {
+        method:'POST',
+        headers:{
+          'content-Type':'application/json',
+          'X-CSRFToken':csrftoken,
+        },
+        body:JSON.stringify({'form':userFormData, 'shipping':shippingInfo})
+      })
+
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('success:', data);
+        alert('Votre payement a bien été enregistré');
+        window.location.href = "{% url 'home' %}"
+      })
+    }
+
+  </script>
+{% endblock content %}

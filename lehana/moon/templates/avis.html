@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Commentaire{% endblock title %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+  <a href="{% url 'commentView' product.pk %}" class = "btn btn-outline-secondary" > Donner votre avis </a>
+{% endif %}
+<br>
+<br>
+
+{% for com in comment %}
+
+<h3>****************************************</h3>
+
+<p>{{com.description}} -- par {{com.user}}</p>
+
+{% if user.is_staff %}
+	<a href="{% url 'deletecomment' com.pk %}" class="btn btn-info"> Supprimer commentaire </a>
+{% endif %}
+
+{% endfor %}
+
+
+
+{% endblock content %}

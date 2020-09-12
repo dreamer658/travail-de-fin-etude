@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Accueil{% endblock title %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<div class="content-section">
+
+  <form method="post">
+    {%csrf_token %}
+    {{ form|crispy }}
+    <br>
+    <button class="btn btn-info" type="submit">Connexion </button>
+
+  </form>
+
+  <div class="border-top pt-3">
+     <small class="text-muted">
+       Besoin d'un compte ?<a href=" {% url 'register' %}"> S'inscrire </a>
+
+     </small>
+
+   </div>
+   <div class="border-top pt-3">
+     <small>
+       <a href=" {% url 'password_reset' %}">Mot de passe oublier ? </a>
+     </small>
+   </div>
+
+
+</div>
+{% endblock content %}

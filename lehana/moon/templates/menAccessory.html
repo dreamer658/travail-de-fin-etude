@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load moonTags %}
+{% block title %}Chaussure{% endblock title %}
+
+{% block content %}
+
+<div class="mescartes">
+
+
+    <div class="row text-center">
+
+      {% for l in listAccessory %}
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100">
+                    <img class="card-img-top" src="{{l.image|default:'http://placehold.it/400x325'}}" alt="">
+                    <div class="card-body">
+                        <h4 class="card-title">{{l.name}}</h4>
+                        <p class="card-text">{{l.description|safe|truncatewords:20}}</p>
+                        <a href="{% url 'ProductDetailed' l.pk %}" class="btn btn-primary">En savoir plus</a>
+                        <a href="#" class="btn btn-outline-secondary">Ajouter au panier</a>
+
+                    </div>
+
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}

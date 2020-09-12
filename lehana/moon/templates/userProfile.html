@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Profil{% endblock title %}
+
+{% block content %}
+
+<h2> Hello à toi {{userProfile.user.username}}</h2>
+++++++++++++++++++++++++++++++++++++++++
+<h2> Info de profil</h2>
+<h2> Date de naissance : {{userProfile.customer.date_of_birth}}</h2>
+<h2> Interet article : {{userProfile.gender.gender_name}}</h2>
+
+{% endblock content %}

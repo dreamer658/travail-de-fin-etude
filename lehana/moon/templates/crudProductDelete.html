@@ -1,0 +1,19 @@
+<!-- delete location HTML template-->
+{% extends 'base.html' %}
+{% block title %}Supprimer un produit{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Suppression</h4>
+        <p> Etes vous sûr de supprimer le produit {{ product.name }} ? </p>
+        <hr>
+        <form method="POST">
+            {% csrf_token %}
+            <a href="{% url 'ProdDetailTest' product.pk %}"> Annuler </a>
+            <button type="submit" class="btn btn-primary"> Confirmer
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock content %}
