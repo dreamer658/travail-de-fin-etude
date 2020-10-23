@@ -5,6 +5,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from moon.forms.userRegisterForm import UserRegisterForm
 from django.contrib.auth.models import User
+from moon.models.profile import UserProfile
 
 def Register(request):
     """ The registration view """
@@ -13,25 +14,26 @@ def Register(request):
 
         if form.is_valid():
             #username = request.POST['username']
-            email = request.POST['email']
-            password = request.POST['password1']
+            this_email = request.POST['email']
+            password = form.cleaned_data.get('password1')
+            password2 = form.cleaned_data.get('password2')
             username = form.cleaned_data.get('username')
-
-
-            #user=User.objects.create_user(username=username, email=email)
-            #user.set_password(password)
-            #user.is_active = False
-            #user.save()
-            #template = render_to_string('email.html',{'name':user.username})
-            #email = EmailMessage(
-            #    'Sujet:Cimer cousin !',
-            #    template,
-            ##    'caldjango0@gmail.com',
-            #    [user.email],
-            #    )
-            #email.fail_silently=False
-            #email.send() 
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
             form.save()
+
+            #ENVOI AUTOMATIQUE DU MAIL
+
+            template = render_to_string('email.html',{'name': username})
+            #user_form.username = user_form.cleaned_data.get('username')
+            email = EmailMessage(
+                'Bienvenue chez UrbanStreet !',
+                template,
+                'caldjango0@gmail.com',
+                [this_email],
+                )
+            email.fail_silently=False
+            email.send()
             messages.success(request, f'Compte pour {username} créé!')
             return redirect('login')
     else:

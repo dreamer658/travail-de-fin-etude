@@ -25,36 +25,46 @@
                 <h3 class="my-3">Description</h3>
                 <p>{{product.description}}</p>
                 <ul>
+                  <li>Matière : {{product.material}}</li>
+                  <br>
                   <li>Prix(EUR) : {{product.price}}</li>
-                    {% if product.cat == 'accessoire' %}
-                       <li>Largeur : {{product.accessory.width}}</li>
-                       <li>Epaisseur : {{product.accessory.thickness}}</li>
-
-                    {% elif product.cat == 'vetement' %}
-                       <li>Taille lettre : {{product.clothes.size_letter}}</li>
-                       <li>Taille nombre : {{product.clothes.size_digit}}</li>
-                    {% else %}
-                       <li>Taille : {{product.shoes.size_number}}</li>
-                    {% endif %}
-
-                    <li>Matière : {{product.material}}</li>
-                    <li>Couleur : {{product.color}}</li>
 
                 </ul>
-                <button data-product={{product.pk}} data-action="add" class = "btn btn-outline-secondary add-btn update-cart" >Ajouter au panier</button>
 
+                <form class="form update-cart" method="GET" action='{% url "updateItem" %}'>
+                {% if product.variation_set.size %}
+                <select class="form-control" name="size">
+                  {% for i in product.variation_set.size %}
+                    <option value="{{i.name|lower}}">Taille: {{i.name|capfirst}} </option>
+                  {% endfor %}
+                </select>
+                {% endif %}
+                <br>
+                {% if product.variation_set.color %}
+                <select class="form-control" name="color">
+                  {% for i in product.variation_set.color %}
+                    <option value="{{i.name|lower}}">couleur: {{i.name|capfirst}} </option>
+                  {% endfor %}
+                </select>
+                {% endif %}
+                <br>
+                <input data-product={{product.pk}} data-action="add" class = "btn btn-outline-secondary add-btn update-cart" value="Ajouter au panier"/>
+                </form>
             		{% if request.user.is_authenticated %}
-            			<a href="{% url 'avis' product.pk %}" class = "btn btn-outline-secondary" > Avis </a>
-
+                  <br>
             			{% if product.is_liked %}
-            			<a href="{% url 'favourite' product.pk %}">
-            				<i class="fas fa-heart fa-2x"></i>
+            			<h6><a class="customh4" href="{% url 'favourite' product.pk %}">Retirer des favoris
+            				<i class="fas fa-heart fa-2x custom-fa"></i><h6>
             			</a>
+                  <br>
             			{% else %}
-            			<a href="{% url 'favourite' product.pk %}">
-            				<i class="far fa-heart fa-2x"></i>
-            			</a>
+            			<h6><a class="customh4" href="{% url 'favourite' product.pk %}">Ajouter aux favoris
+            				<i class="far fa-heart fa-2x custom-fa"></i>
+            			</a><h6>
+                  <br>
             			{% endif %}
+                  <br>
+                  <a href="{% url 'avis' product.pk %}" class = "btn btn-outline-secondary custom-bouton" > Consulter les avis </a>
 
             		{% endif %}
             </div>

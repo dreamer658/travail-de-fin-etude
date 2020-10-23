@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Promos{% endblock title %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h2> Voilà tes reductions brave âme </h2>
+
+{% for p in promos %}
+
+
+<div >
+    <h4>{{p.name}}</h4>
+    <h4>{{p.price}}</h4>
+    <a href="{% url 'ProductDetailed' p.pk %}" class = "btn btn-outline-secondary add-btn" >Voir</a>
+
+</div>
+{% empty %}
+
+<h3> Pas encore de favoris, brave âme. </h3>
+
+
+{% endfor %}
+
+
+
+
+{% endblock content %}

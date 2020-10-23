@@ -2,11 +2,11 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-#from django.http import HttpResponse
+from django.http import HttpResponse
 from django.template import loader
 from moon.models.product import Product
-#from moon.models.customer import Customer
-#from moon.models.order import Order
+from moon.models.customer import Customer
+from moon.models.order import Order
 from moon.filters.filters import ProductFilter
 
 
@@ -26,7 +26,6 @@ def Favourite(request, pk):
         product.favourites.add(request.user)
         product.is_liked=True
         product.save()
-        messages.success(request, f'Ajouter au favoris !')
 
 
     #return redirect('home')
@@ -36,6 +35,20 @@ def Favourite(request, pk):
 
 @login_required
 def FavouriteList(request):
+
     #if we find a product that has a favourite field that equals user.pk we gonna return that post
-    new = Product.objects.filter(favourites=request.user)
-    return render (request,'favourites.html', {'new':new})
+    favs = Product.objects.filter(favourites=request.user)
+
+    try:
+    	 customer = request.user.customer
+    except:
+    	device = request.COOKIES['device']
+    	customer, created = Customer.objects.get_or_create(device=device)
+
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    items = order.orderitem_set.all()
+    cartItems = order.get_cart_items
+
+    context = {'favs':favs,'items': items, 'order': order, 'cartItems':cartItems}
+
+    return render (request,'favourites.html', context)

@@ -3,10 +3,13 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-
-<h2>Mon avis</h2>
-
+<br>
+<br>
+<h2>Donne nous ton avis</h2>
+<br>
+<br>
 <form method="post">
+
   {% csrf_token %}
   {{form.as_p}}
   <br>

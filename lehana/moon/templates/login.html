@@ -4,29 +4,45 @@
 {% block content %}
 
 
-<div class="content-section">
-
-  <form method="post">
-    {%csrf_token %}
-    {{ form|crispy }}
-    <br>
-    <button class="btn btn-info" type="submit">Connexion </button>
-
-  </form>
-
-  <div class="border-top pt-3">
-     <small class="text-muted">
-       Besoin d'un compte ?<a href=" {% url 'register' %}"> S'inscrire </a>
-
-     </small>
-
-   </div>
-   <div class="border-top pt-3">
-     <small>
-       <a href=" {% url 'password_reset' %}">Mot de passe oublier ? </a>
-     </small>
-   </div>
 
 
+<div class="container-fluid">
+  <div class="row no-gutter">
+    <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+    <div class="col-md-8 col-lg-6">
+      <div class="login d-flex align-items-center py-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-9 col-lg-8 mx-auto">
+              <h3 class="login-heading mb-4">Connecte-toi !</h3>
+              <form action="{%url 'login'%}" method="post">
+                                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="form-label-group">
+                  {{ form.username }}
+                  <label for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
+
+                    {{ form.username.errors }}
+                </div>
+
+                <div class="form-label-group">
+                  {{ form.password }}
+                  <label for="{{ form.password.id_for_label }}">Mot de passe</label>
+
+                    {{ form.password.errors }}
+                </div>
+                <br>
+                <button class="btn btn-outline-success btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit" value="login">S'authentifier</button>
+                <div class="text-center">
+                  <a class="small" href=" {% url 'password_reset' %}">Mot de passe oublié?</a></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
 {% endblock content %}

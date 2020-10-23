@@ -59,13 +59,24 @@ class Category(MPTTModel):
 
 
 
+class ProductType(models.Model):
+    name = models.CharField(max_length=60, null=True, verbose_name="nom")
+
+
+    class Meta:
+        """ Meta definition for Shoes"""
+        verbose_name = "Type de produit"
+        verbose_name_plural = "Types de produit"
+
+    def __str__(self):
+        """Unicode representation of Product type."""
+
+        return "[{}] {} ".format(self.pk, self.name)
+
+
 class Product(models.Model):
     """Model definition for UserProfile.
     """
-
-    class NewManager(models.Manager):
-        def get_queryset(self):
-            return super().get_queryset()
 
     maker = models.ForeignKey(Maker, on_delete=models.CASCADE, null=True)
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True)
@@ -78,9 +89,11 @@ class Product(models.Model):
     material = models.CharField(max_length=60, verbose_name="matière")
     description = models.TextField(verbose_name="Description")
     slug = models.SlugField()
-    #is_liked = models.CharField(max_length=60,default="false", verbose_name="is_liked")
     is_liked = models.BooleanField(default=False, verbose_name='is_liked')
-    favourites = models.ManyToManyField(User, related_name='favourite', blank=True)
+    favourites = models.ManyToManyField(User, related_name='favourite', blank=True)#list des useurs qui vont liker ce produit (voir FavouriteList pour comprendre)
+    is_discounted = models.BooleanField(default=False, verbose_name='is_discounted')
+    discountUser = models.ManyToManyField(User, related_name='users_pour_qui_soldé', blank=True)
+    productType = models.ForeignKey(ProductType, on_delete=models.CASCADE, null=True)
 
     class Meta:
         """Meta definition for Product."""
@@ -92,7 +105,7 @@ class Product(models.Model):
     def get_absolute_url(self):
         """Return absolute url for Representation."""
 
-        return reverse('ProdDetailTest', kwargs={'pk': self.pk})
+        return reverse('ProductDetailed', kwargs={'pk': self.pk})
 
     def get_slug_list_for_categories(self):
         try:
@@ -116,62 +129,6 @@ class Product(models.Model):
         return "[{}] {} {} {} {} {}".format(self.pk, self.gender.gender_name, self.name, self.stock, self.price, self.color)
 
 
-
-
-
-class Shoes(models.Model):
-    """Model definition for Shoes.
-    """
-
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,verbose_name="Produit")
-    size_number = models.CharField(max_length=60, verbose_name="Taille")
-
-
-    class Meta:
-        """ Meta definition for Shoes"""
-        verbose_name = "Chaussure"
-        verbose_name_plural = "Chaussures"
-
-    def __str__(self):
-        """Unicode representation of Shoes."""
-
-        return "[{}] {} {} ".format(self.pk, self.product.name, self.size_number)
-
-class Clothes(models.Model):
-    """Model definition for Clothes.
-    """
-
-    product = models.OneToOneField(Product, on_delete=models.CASCADE,verbose_name="Produit")
-    size_letter = models.CharField(max_length=60, verbose_name="Taille lettre")
-    size_digit = models.CharField(max_length=60, verbose_name="Taille nombre",blank=True)
-
-    class Meta:
-        """ Meta definition for Clothes"""
-        verbose_name = "Vetement"
-        verbose_name_plural = "Vetements"
-
-    def __str__(self):
-        """Unicode representation of Shoes."""
-
-        return "[{}] {} {}".format(self.pk, self.product.name, self.size_letter, self.size_digit)
-
-class Accessory(models.Model):
-    """Model definition for Accessory.
-    """
-
-    product = models.OneToOneField(Product, on_delete=models.CASCADE,verbose_name="Produit")
-    width = models.CharField(max_length=60, verbose_name="Largeur")
-    thickness = models.CharField(max_length=60, verbose_name="Epaisseur")
-
-    class Meta:
-        """ Meta definition for Accessory"""
-        verbose_name = "Accessoire"
-        verbose_name_plural = "Accessoires"
-
-    def __str__(self):
-        """Unicode representation of Accessoire."""
-
-        return "[{}] {} {} ".format(self.pk, self.product.name, self.width)
 
 class Brand(models.Model):
     """Model definition for Brand.
@@ -205,3 +162,32 @@ class Look(models.Model):
 
     def __str__(self):
         return  "[{}] {} {}".format(self.pk, self.look, self.product.name)
+
+class VariationManager(models.Manager):
+    def size(self):
+        return super(VariationManager,self).filter(category='size')
+
+    def color(self):
+        return super(VariationManager,self).filter(category='color')
+
+
+VAR_CATEGORIES = {
+('size','size'),
+('color','color'),
+('package','package'),
+}
+
+class Variation(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+    category = models.CharField(max_length=50, choices=VAR_CATEGORIES,default='size')
+    name = models.CharField(max_length=50, null=True) #size, color
+    objects = VariationManager()
+    def __str__(self):
+        return  "[{}] {} {}".format(self.pk, self.product.name, self.name)
+
+class ItemVariation(models.Model):
+    variation = models.ForeignKey(Variation, on_delete=models.CASCADE, null=True)
+    value = models.CharField(max_length=50, null=True) #L, M, XL, 45, rouge
+    attachement = models.ImageField()
+    def __str__(self):
+        return  "[{}] {}".format(self.pk, self.value)

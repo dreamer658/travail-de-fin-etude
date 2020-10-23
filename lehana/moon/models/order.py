@@ -17,18 +17,37 @@ class Status(models.Model):
         return "[{}] {}".format(self.pk, self.status)
 
 
+class Coupon(models.Model):
+
+    """ Model definition for a coupon. """
+    code = models.CharField(max_length=30, null=True, verbose_name="coupon")
+    valid_from = models.DateTimeField(null=True, blank=True)
+    valid_to = models.DateTimeField(null=True, blank=True)
+    discount = models.IntegerField(null=True, blank=True)
+    active = models.BooleanField(null=True, blank=True)
+
+    class Meta:
+        """ Meta definition for the coupon. """
+        verbose_name = "Coupon"
+        verbose_name_plural = "Coupons"
+
+    def __str__(self):
+        return "[{}] {}".format(self.pk, self.code)
 
 
 class Order(models.Model):
     """ Method definition for OrderItem. """
 
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
-    status = models.ForeignKey(Status, on_delete=models.CASCADE, null=True)
-    total_quantity = models.IntegerField(null=True, verbose_name="Nombre d'articles")
-    total_price = models.FloatField(null=True, verbose_name="Montant total (EUR)")
-    date = models.DateTimeField(auto_now_add=True, blank=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
+    status = models.ForeignKey(Status, on_delete=models.CASCADE, null=True, blank=True)
+    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, null=True, blank=True)
+    total_quantity = models.IntegerField(null=True, verbose_name="Nombre d'articles", blank=True)
+    total_price = models.FloatField(null=True, verbose_name="Montant total (EUR)", blank=True)
+    date = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     complete = models.BooleanField(default = False, blank=True, null=True)
-    transaction_id = models.CharField(max_length=200, null=True, verbose_name="num de commande")
+    transaction_id = models.CharField(max_length=200, null=True, verbose_name="num de commande", blank=True)
+    been_discounted = models.BooleanField(default = False, blank=True, null=True)
+
 
     #Les methods pour ajouter etc.
     @property
@@ -36,6 +55,9 @@ class Order(models.Model):
         """ To get the total price of the cart. """
         orderitems = self.orderitem_set.all()# accès à l'autre coté de la ForeignKey
         total = sum([item.get_total for item in orderitems])
+        if self.been_discounted:
+            total = total-((total/100)*20)
+        self.total_price = total
         return total
 
     @property
@@ -44,6 +66,7 @@ class Order(models.Model):
 
         orderitems = self.orderitem_set.all()# accès à l'autre coté de la ForeignKey
         total = sum([item.quantity for item in orderitems])
+        self.total_quantity = total
         return total
 
 

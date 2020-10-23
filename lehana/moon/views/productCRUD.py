@@ -27,14 +27,14 @@ def CreateProduct(request):
 
 
 def UpdateProduct(request, pk):
-    """ Updating a location
+    """ Updating a product
 
     This will update a location within our app, if we got permissions
     """
 
     product = Product.objects.get(pk=pk)  # the slug we got on the url
     form = ProductForm(request.POST or None, instance=product)
-    # it will allow us to modify filled with the instance of the "pk location"
+    # it will allow us to modify field with the instance of the "pk product"
 
     if form.is_valid():
         form.save()

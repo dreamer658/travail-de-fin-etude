@@ -10,7 +10,7 @@ from moon.models.product import Product
 from moon.models.profile import Comment
 
 
-@login_required
+@login_required 
 def CommentView(request, pk):
     product = get_object_or_404(Product, pk=pk)
     comment = Comment.objects.filter(product=pk) #To display only the coms with that pk

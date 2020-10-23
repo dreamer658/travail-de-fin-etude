@@ -41,11 +41,11 @@
 			</div>
 
 			<br>
+
 			<div class="box-element hidden" id="payment-info">
+
 				<small>Paypal</small>
         <div id="paypal-button-container"></div>
-        <!-- <div id="paypal-button-container"> </div> -->
-        <button id="make-payement">Faire un payement</button>
 
 			</div>
 
@@ -61,12 +61,12 @@
 				<div class="cart-row">
 					<div style="flex:2"><img class="row-image" src="{{ item.product.image }}"></div>
 					<div style="flex:2"><p>{{item.product.name}}</p></div>
-					<div style="flex:1"><p>{{item.product.price|floatformat:2}}£</p></div>
+					<div style="flex:1"><p>{{item.product.price|floatformat:2}}€</p></div>
 					<div style="flex:1"><p>{{item.quantity}}</p></div>
 				</div>
         {% endfor %}
 				<h5>Items:   {{order.get_cart_items}}</h5>
-				<h5>Total:   {{order.get_cart_total|floatformat:2}}£</h5>
+				<h5>Total:   {{order.get_cart_total|floatformat:2}}€</h5>
 			</div>
 		</div>
 	</div>

@@ -1,32 +1,47 @@
-{% extends "base.html" %}
+{% extends "baseMen.html" %}
 {% load moonTags %}
-{% block title %}Chaussure{% endblock title %}
+{% block title %}Hommes-Vetements{% endblock title %}
 
-{% block content %}
+{% block page-content %}
 
-<div class="mescartes">
+<br>
+<div class="container" style="margin-top:30px;margin-bottom:0px">
 
+  <div class="row text-center">
 
-    <div class="row text-center">
-
-      {% for l in listClothes %}
-
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card h-100">
-                    <img class="card-img-top" src="{{l.image|default:'http://placehold.it/400x325'}}" alt="">
-                    <div class="card-body">
-                        <h4 class="card-title">{{l.name}}</h4>
-                        <p class="card-text">{{l.description|safe|truncatewords:20}}</p>
-                        <a href="{% url 'ProductDetailed' l.pk %}" class="btn btn-primary">En savoir plus</a>
-                        <a href="#" class="btn btn-outline-secondary">Ajouter au panier</a>
-
-                    </div>
-
-
-            </div>
+    {% for product in listClothes %}
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="card h-100 product">
+        <a href="{% url 'ProductDetailed' product.pk %}">
+          <img  class="card-img-top" src="{{product.image|default:'http://placehold.it/270x270'}}" width="270" height="270">
+        </a>
+        <div class="card-body">
+          <h4 class="card-title">{{product.name}}</h4>
         </div>
-        {% endfor %}
+      </div>
     </div>
+    {% endfor %}
+  </div>
 </div>
 
-{% endblock content %}
+<div class="pagination justify-content-center">
+  <span class="step-link">
+    {% if listClothes.has_previous %}
+        <a  href="{% my_url 1 'page' request.GET.urlencode %}"><< </a>
+        <a  href="{% my_url listClothes.previous_page_number 'page' request.GET.urlencode %}"> < </a>
+    {% endif %}
+
+    <span class="current">
+      {{listClothes.number}} sur {{listClothes.paginator.num_pages}}.
+    </span>
+
+    {% if listClothes.has_next %}
+        <a  href="{% my_url listClothes.next_page_number 'page' request.GET.urlencode %}"> > </a>
+        <a  href="{% my_url listClothes.paginator.num_pages 'page' request.GET.urlencode %}"> >></a>
+    {% endif %}
+  </span>
+</div>
+
+
+
+{% endblock page-content %}

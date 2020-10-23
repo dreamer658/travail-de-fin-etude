@@ -3,32 +3,43 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+<br>
+<div class="lg-center">
+  <h2> Liste de favoris. </h2>
 
-<h2> Liste de favoris </h2>
-
-{% for product in new %}
+{% for product in favs %}
 
 
-<div >
+<div>
+<br>
+<br>
+<br>
     <h4 >{{product.name}}</h4>
-    <a href="{% url 'ProdDetailTest' product.pk %}" data-product={{product.pk}} data-action="add" class = "btn btn-outline-secondary add-btn update-cart" >Voir</a>
-
     <div id="favourite-section">
+      <a href="{% url 'ProductDetailed' product.pk %}"> 
+        <img  class="img-thumbnail" src="{{product.image|default:'http://placehold.it/200x200'}}" width="200" height="200">
+      </a>
       <a href="{% url 'favourite' product.pk %}" class = "btn btn-info">
-        delete
+        retirer
       </a>
 
     </div>
 
 </div>
+
+
 {% empty %}
 
-<h3> Pas encore de favoris, brave âme. </h3>
+<br>
+<br>
+  <div class="lg-center">
+    <h2> Pas encore de favoris, brave âme. </h2>
 
+   </div>
 
 {% endfor %}
 
-
+ </div>
 
 
 {% endblock content %}

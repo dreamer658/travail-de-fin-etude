@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load moonTags %}
+{% block title %}Hommes{% endblock title %}
+
+{% block content %}
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light custom-nav-trois">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbarResponsive">
+      <ul class="navbar-nav mc-auto navlink">
+        <li class="nav-item">
+          <a class="nav-link current" href="{% url 'WomenShoes' %}"> Chaussures </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link current" href="{% url 'WomenClothes' %}"> Vêtements </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link current" href="{% url 'WomenAccessory' %}"> Accessoires </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link current" href="#"> Marques </a>
+        </li>
+      </ul>
+
+    </div>
+  </nav>
+
+  <div class="wrapper-wo">
+    <!-- search part the result of the search will be displayed in another page
+  that I've specified in the form action searchresult -->
+    <div class="form-group-deux">
+      <form action="{% url 'Women' %}">
+              <input name="search"  placeholder=" Rechercher.. " value="{{search_term}}">
+              <button class="btn-search btn-primary" type="submit"><i class="fas fa-search fa-search-custom"></i></button>
+      </form>
+    </div>
+
+  </div>
+
+
+<!-- containt of the page -->
+
+</div>
+
+<div class="page-content">
+
+  {% block page-content %}
+  {% endblock page-content %}
+
+</div>
+
+{% endblock content %}

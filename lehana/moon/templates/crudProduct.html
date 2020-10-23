@@ -11,11 +11,10 @@
 <!-- The form to update or create a locattion-->
 <form method="post">
   {%csrf_token %}
-  {{ createProductForm|crispy }}
-  {{ updateProductForm|crispy }}
+  {{ createProductForm.as_p}}
+  {{ updateProductForm.as_p}}
   <br>
   <button class="btn btn-info" type="submit">Enregistrer </button>
-
 </form>
 
 {% endblock content %}

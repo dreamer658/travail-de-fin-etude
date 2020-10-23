@@ -1,0 +1,20 @@
+<!-- location CRUD html template-->
+{% extends "base.html" %}
+{% block title %}création/mise à jour d'articles{% endblock title %}
+
+{% block header %} <h2> CRUD des articles ! </h2> {% endblock header %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<!-- The form to update or create a locattion-->
+<form method="post">
+  {%csrf_token %}
+  {{couponform.as_p}} 
+
+  <br>
+  <button class="btn btn-info" type="submit">Enregistrer</button>
+</form>
+
+{% endblock content %}

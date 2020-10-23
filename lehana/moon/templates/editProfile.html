@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load moonTags %}
+{% block title %}Hommes{% endblock title %}
+
+{% block content %}
+<form action="{% url 'edit-profile' %}"  method="post">
+  {% csrf_token %}
+  <div class="formgroup">
+    <label for="id_birthday">Date de naissance</label>
+    <input type="form-control" type="text" placeholder="jj/mm/aaaa" name="birthday" id="id_birthday" value="{{form.birthday.value}}">
+    {{form.errors}}
+  </div>
+  <input type="submit" value="update Profile" class="btn btn-dark">
+</form>
+
+{% endblock content %}

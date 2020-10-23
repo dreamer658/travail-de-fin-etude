@@ -9,11 +9,42 @@ from moon.filters.filters import ProductFilter
 from django.core.paginator import Paginator
 
 
-def home(request):
+def Home(request):
     """List of locations.
 
     This will display paginated list of locations and provide a search bar
     """
+
+    products = Product.objects.all()
+    product_page_obj = products[:4]
+    product_four_last = products[4:8]
+
+    try:
+    	customer = request.user.customer
+
+    except:
+    	device = request.COOKIES['device']
+    	customer, created = Customer.objects.get_or_create(device=device)
+
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    items = order.orderitem_set.all()
+    cartItems = order.get_cart_items
+
+
+
+    context = {'items': items,
+                'order': order, 'cartItems':cartItems,
+                'products':product_page_obj,
+                'product_four_last' : product_four_last}
+
+    #context = {'products':products}
+
+    return render(request, 'home.html', context)
+
+
+
+def ResultsearchHome(request):
+    """ The result of the search in the home page"""
 
     products = Product.objects.all()
 
@@ -55,22 +86,16 @@ def home(request):
 
     #context = {'products':products}
 
-    return render(request, 'home.html', context)
+    return render(request, 'resultsearchHome.html', context)
 
 
 
-
-def men(request):
-    """Home views for men website"""
-
-    return render(request, 'men.html', {})
-
-def women(request):
+def Women(request):
     """Home views for women website"""
 
     return render(request, 'women.html', {})
 
-def kids(request):
+def Kids(request):
     """Home views for kids website"""
 
     return render(request, 'kids.html', {})

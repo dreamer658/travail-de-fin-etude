@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Profil{% endblock title %}
+
+{% block content %}
+<br>
+<br>
+<h2> Détails des commandes.</h2>
+{% for userOrder in userOrder %}
+<br>
+<br>
+{% if userOrder.total_quantity != None %}
+<h3> Date de commande       : {{userOrder.date}}</h2>
+<h3> Nombre d'articles      : {{userOrder.total_quantity}}</h2>
+<h3> Montant de la commande : {{userOrder.total_price}} $ </h3>
+{% endif %}
+
+{% endfor %}
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+{% endblock content %}

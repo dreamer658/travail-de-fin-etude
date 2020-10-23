@@ -1,23 +1,44 @@
-{% extends "base.html" %}
-{% block title %}Enfant{% endblock title %}
+{% extends "baseKids.html" %}
+{% load moonTags %}
+{% block title %}Enfants{% endblock title %}
 
-{% block content %}
+{% block page-content %}
 
-<ul class="navbar-nav">
+<br>
+<div class="container" style="margin-top:30px;margin-bottom:0px">
+  <div class="row">
+  {% for product in kidsProducts %}
+  <div class="col-lg-3 col-md-6 mb-4">
+    <div class="card h-100 product">
+      <a href="{% url 'ProductDetailed' product.pk %}">
+        <img  class="card-img-top" src="{{product.image|default:'http://placehold.it/270x270'}}" width="270" height="270">
+      </a>
+      <div class="card-body">
+        <h4 class="card-title">{{product.name}}</h4>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  </div>
+</div>
 
-  <li class="nav-item">
-      <a class="nav-link" href="#" >Chaussures</a>
-  </li>
-    <li class="nav-item ">
-        <a class="nav-link" href="#">Vetements</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Accessoire</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Marques</a>
-    </li>
-</ul>
-<h1> Elements de l'accueil Enfant youpi</h1>
+<br>
+<div class="pagination justify-content-center">
+  <span class="step-link">
+    {% if kidsProducts.has_previous %}
+        <a  href="{% my_url 1 'page' request.GET.urlencode %}"><< </a>
+        <a  href="{% my_url kidsProducts.previous_page_number 'page' request.GET.urlencode %}"> < </a>
+    {% endif %}
 
-  {% endblock content %}
+    <span class="current">
+      {{kidsProducts.number}} sur {{kidsProducts.paginator.num_pages}}.
+    </span>
+
+    {% if kidsProducts.has_next %}
+        <a  href="{% my_url kidsProducts.next_page_number 'page' request.GET.urlencode %}"> > </a>
+        <a  href="{% my_url kidsProducts.paginator.num_pages 'page' request.GET.urlencode %}"> >></a>
+    {% endif %}
+  </span>
+</div>
+
+{% endblock page-content %}
